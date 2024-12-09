@@ -198,7 +198,7 @@ class Tree {
       callback(node);
     }
   }
-  height(node) {
+  height(node = this.root) {
     let level = 0;
     let result = 0;
 
@@ -217,28 +217,54 @@ class Tree {
 
     return helperMethod(node, level);
   }
-  depth(node) {
+  depth(node = this.root) {
     let level = 0;
     let result = 0;
     let root = this.root;
 
     function helperMethod(temp, level) {
       if (!temp) {
-        result = -1
+        result = -1;
         return result;
       }
-      if(temp.data === node.data) {
+      if (temp.data === node.data) {
         result = level;
         return result;
       }
       let left = helperMethod(temp.left, level + 1);
-      if(left !== -1) {
+      if (left !== -1) {
         return result;
       }
       helperMethod(temp.right, level + 1);
-      return  result;
+      return result;
     }
     return helperMethod(root, level);
+  }
+  isBalanced(temp = this.root) {
+    if (!temp) {
+      return true;
+    }
+    let left = this.height(this.root.left);
+    let right = this.height(this.root.right);
+
+    if (
+      Math.abs(left - right) <= 1 &&
+      this.isBalanced(temp.right) &&
+      this.isBalanced(temp.right)
+    ) {
+      return true;
+    }
+    return false;
+  }
+  reBalence() {
+    if (!this.isBalanced()) {
+      let newArray = [];
+      this.inorderCall((node) => {
+        newArray.push(node);
+      });
+      console.log(newArray);
+      this.tree(newArray);
+    }
   }
 }
 
@@ -256,63 +282,4 @@ function sortedArrayToBST(array, start, end) {
   return root;
 }
 
-let newTree = new Tree();
-newTree.tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-
-function preOrder(root) {
-  if (root === null) return;
-  console.log(root.data);
-  preOrder(root.left);
-  preOrder(root.right);
-}
-function inorder(root) {
-  if (root !== null) {
-    inorder(root.left);
-    console.log(root.data + " ");
-    inorder(root.right);
-  }
-}
-
-//preOrder(newTree.root);
-
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-  if (node === null) {
-    return;
-  }
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-  }
-  console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-  }
-};
-newTree.insert(10);
-newTree.insert(22);
-/* newTree.insert(0);
-newTree.insert(2); */
-newTree.insert(100);
-newTree.insert(6346);
-newTree.insert(20);
-newTree.insert(21);
-/* newTree.delete(0);
-newTree.delete(2);*/
-//newTree.delete(8);
-//newTree.delete(4);
-inorder(newTree.root);
-newTree.delete(23);
-console.log("smallest: " + newTree.findTheSmallest(newTree.root.left).data);
-inorder(newTree.root);
-prettyPrint(newTree.root);
-let node = new Node();
-node.data = 7;
-node.left = 4;
-node.right = 9;
-console.log("getting the height: " + newTree.depth(node));
-
-console.log("find 5:" + newTree.find(8));
-
-let node2 = new Node();
-node2.data = 100;
-node2.left = 5;
-node2.right = 10;
+export {Tree,Node}
