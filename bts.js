@@ -5,6 +5,17 @@ class Node {
     this.left = null;
     this.right = null;
   }
+  isEqual(node) {
+    if (this.root.data === node.data) {
+      if (
+        this.root.right.data === node.right.data &&
+        this.root.left.data === node.left.data
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 class Tree {
@@ -206,6 +217,29 @@ class Tree {
 
     return helperMethod(node, level);
   }
+  depth(node) {
+    let level = 0;
+    let result = 0;
+    let root = this.root;
+
+    function helperMethod(temp, level) {
+      if (!temp) {
+        result = -1
+        return result;
+      }
+      if(temp.data === node.data) {
+        result = level;
+        return result;
+      }
+      let left = helperMethod(temp.left, level + 1);
+      if(left !== -1) {
+        return result;
+      }
+      helperMethod(temp.right, level + 1);
+      return  result;
+    }
+    return helperMethod(root, level);
+  }
 }
 
 function sortedArrayToBST(array, start, end) {
@@ -270,6 +304,15 @@ newTree.delete(23);
 console.log("smallest: " + newTree.findTheSmallest(newTree.root.left).data);
 inorder(newTree.root);
 prettyPrint(newTree.root);
-console.log("getting the height: " + newTree.height(newTree.root));
+let node = new Node();
+node.data = 7;
+node.left = 4;
+node.right = 9;
+console.log("getting the height: " + newTree.depth(node));
 
 console.log("find 5:" + newTree.find(8));
+
+let node2 = new Node();
+node2.data = 100;
+node2.left = 5;
+node2.right = 10;
