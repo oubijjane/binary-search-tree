@@ -90,6 +90,68 @@ class Tree {
     }
     return this.findTheSmallest(temp.left, smallest);
   }
+  find(value, temp = this.root) {
+    if (!temp) return false;
+    if (temp.data === value) {
+      console.log(
+        `node value: ${temp.data}, left node: ${temp.left.data}, right node: ${temp.right.data}`
+      );
+      return temp;
+    }
+    if (temp.data > value) {
+      return this.find(value, temp.left);
+    } else {
+      return this.find(value, temp.right);
+    }
+  }
+
+  levelOrderCall(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback function is required.");
+    }
+    let result = [];
+    let level = 0;
+    let node = this.root;
+    function levelOrder(temp, level) {
+      if (!temp) {
+        return;
+      }
+      if (!result[level]) {
+        result[level] = [];
+      }
+      result[level].push(temp.data);
+      levelOrder(temp.left, level + 1);
+      levelOrder(temp.right, level + 1);
+    }
+    levelOrder(node, level);
+    for (let levelNodes of result) {
+      for (let node of levelNodes) {
+        callback(node);
+      }
+    }
+  }
+  inorderCall(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback function is required.");
+    }
+    let result = [];
+    let nodes = this.root;
+
+    function inorder(temp = nodes) {
+      if (temp !== null) {
+        inorder(temp.left);
+        result.push(temp.data);
+        //console.log(temp.data + " ");
+        inorder(temp.right);
+      }
+    }
+    inorder();
+    for (let levelNodes of result) {
+      for (let node of levelNodes) {
+        callback(node);
+      }
+    }
+  }
 }
 
 function sortedArrayToBST(array, start, end) {
@@ -125,6 +187,7 @@ function inorder(root) {
     inorder(root.right);
   }
 }
+
 //preOrder(newTree.root);
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -156,3 +219,11 @@ newTree.delete(23);
 console.log("smallest: " + newTree.findTheSmallest(newTree.root.left).data);
 inorder(newTree.root);
 prettyPrint(newTree.root);
+console.log(
+  "using the call back function: " +
+    newTree.levelOrderCall((node) => {
+      console.log(node);
+    })
+);
+
+console.log("find 5:" + newTree.find(5).data);
