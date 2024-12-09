@@ -93,9 +93,6 @@ class Tree {
   find(value, temp = this.root) {
     if (!temp) return false;
     if (temp.data === value) {
-      console.log(
-        `node value: ${temp.data}, left node: ${temp.left.data}, right node: ${temp.right.data}`
-      );
       return temp;
     }
     if (temp.data > value) {
@@ -190,6 +187,25 @@ class Tree {
       callback(node);
     }
   }
+  height(node) {
+    let level = 0;
+    let result = 0;
+
+    function helperMethod(node, level) {
+      if (result <= level) {
+        result = level - 1;
+      }
+      if (!node) {
+        //console.log(result);
+        return result;
+      }
+      helperMethod(node.left, level + 1);
+      helperMethod(node.right, level + 1);
+      return result;
+    }
+
+    return helperMethod(node, level);
+  }
 }
 
 function sortedArrayToBST(array, start, end) {
@@ -207,10 +223,7 @@ function sortedArrayToBST(array, start, end) {
 }
 
 let newTree = new Tree();
-newTree.tree([
-  1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 65, 79, 234, 596, 14, 65,
-  147, 2, 6, 15,
-]);
+newTree.tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
 function preOrder(root) {
   if (root === null) return;
@@ -257,11 +270,6 @@ newTree.delete(23);
 console.log("smallest: " + newTree.findTheSmallest(newTree.root.left).data);
 inorder(newTree.root);
 prettyPrint(newTree.root);
-console.log(
-  "using the call back function: " +
-    newTree.postOrderCall((node) => {
-      console.log(node);
-    })
-);
+console.log("getting the height: " + newTree.height(newTree.root));
 
-console.log("find 5:" + newTree.find(5).data);
+console.log("find 5:" + newTree.find(8));
