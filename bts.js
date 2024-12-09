@@ -146,10 +146,48 @@ class Tree {
       }
     }
     inorder();
-    for (let levelNodes of result) {
-      for (let node of levelNodes) {
-        callback(node);
+    for (let node of result) {
+      callback(node);
+    }
+  }
+  preOrderCall(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback function is required.");
+    }
+    let result = [];
+    let nodes = this.root;
+
+    function preOrder(temp = nodes) {
+      if (temp !== null) {
+        result.push(temp.data);
+        preOrder(temp.left);
+        //console.log(temp.data + " ");
+        preOrder(temp.right);
       }
+    }
+    preOrder();
+    for (let node of result) {
+      callback(node);
+    }
+  }
+  postOrderCall(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("A callback function is required.");
+    }
+    let result = [];
+    let nodes = this.root;
+
+    function postOrder(temp = nodes) {
+      if (temp !== null) {
+        postOrder(temp.left);
+        //console.log(temp.data + " ");
+        postOrder(temp.right);
+        result.push(temp.data);
+      }
+    }
+    postOrder();
+    for (let node of result) {
+      callback(node);
     }
   }
 }
@@ -221,7 +259,7 @@ inorder(newTree.root);
 prettyPrint(newTree.root);
 console.log(
   "using the call back function: " +
-    newTree.levelOrderCall((node) => {
+    newTree.postOrderCall((node) => {
       console.log(node);
     })
 );
